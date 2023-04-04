@@ -243,7 +243,7 @@ int task_5()
 struct Node {
     Node* next;
     Node* prev;
-    int nameNode;
+    int nameNode;  //имя узла
     static int countNodes;
     Node() {
         next = nullptr;
@@ -280,7 +280,7 @@ public:
         Tail = temp;
     }
     void writeToFileFromTail() {
-        ofstream outFile("output_task6.txt");
+        ofstream outFile("output.txt");
         if (!outFile.is_open()) {
             cout << "Error: unable to open file" << endl;
             return;
@@ -293,7 +293,7 @@ public:
         outFile.close();
     }
     void writeToFileFromHead() {
-        ofstream outFile("output_task6.txt");
+        ofstream outFile("output.txt");
         if (!outFile.is_open()) {
             cout << "Error: unable to open file" << endl;
             return;
@@ -304,6 +304,34 @@ public:
             temp = temp->next;
         }
         outFile.close();
+    }
+    void insert(int nameNode, int position) {
+        Node* temp = new Node(nameNode);
+        if (Head == nullptr) {
+            Head = temp;
+            Tail = temp;
+            return;
+        }
+        if (position == 1) {
+            temp->next = Head;
+            Head->prev = temp;
+            Head = temp;
+            return;
+        }
+        Node* curr = Head;
+        for (int i = 1; i < position - 1 && curr != nullptr; i++) {
+            curr = curr->next;
+        }
+        if (curr == nullptr) {
+            Tail->next = temp;
+            temp->prev = Tail;
+            Tail = temp;
+            return;
+        }
+        temp->next = curr->next;
+        curr->next->prev = temp;
+        curr->next = temp;
+        temp->prev = curr;
     }
 };
 int task_6() {
@@ -316,12 +344,23 @@ int task_6() {
     return 0;
 }
 
+int task_7(){
+    LinkedList list;
+    list.push_back(1);
+    list.push_back(2);
+    list.push_back(3);
+    list.insert(4, 2);
+    list.writeToFileFromHead();
+    list.writeToFileFromTail();
+    return 0;
+}
+
 class StudentInfo {
 private:
-    tuple<string, string, char*> infoStudent;
+    tuple<string, string, string> infoStudent;
     map<string, pair<list<int>, float>> subjMark;
 public:
-    StudentInfo(string surname, string name, char* studentID) {
+    StudentInfo(string surname, string name, string studentID) {
         infoStudent = make_tuple(surname, name, studentID);
     }
 
